@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://pantomime.org/sitemap.xml
-Sitemap: https://pantomime.org/rss.xml
+Sitemap: https://brulafine-avis-clients.netlify.app/sitemap.xml
