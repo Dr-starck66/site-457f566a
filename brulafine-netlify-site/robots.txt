@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://brulafine-avis-clients.netlify.app/sitemap.xml
