@@ -1,0 +1,54 @@
+name: Deploy Brulafine to Vercel
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'brulafine-vercel-site/**'
+      - '.github/workflows/deploy-brulafine-vercel.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package public site
+        run: tar -czf /tmp/brulafine-vercel.tgz -C brulafine-vercel-site .
+      - name: Deploy claimable Vercel preview
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST 'https://claude-skills-deploy.vercel.com/api/deploy'             -F 'file=@/tmp/brulafine-vercel.tgz'             -F 'framework=null'             -o /tmp/vercel-response.json
+          cat /tmp/vercel-response.json
+          python - <<'PY'
+          import json, os
+          j=json.load(open('/tmp/vercel-response.json'))
+          u=j.get('previewUrl') or j.get('url')
+          if not u:
+              raise SystemExit('No preview URL returned')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('url='+u+'\n')
+          print('VERCEL_PREVIEW_URL='+u)
+          print('VERCEL_DEPLOYMENT_ID='+str(j.get('deploymentId')))
+          print('VERCEL_PROJECT_ID='+str(j.get('projectId')))
+          print('VERCEL_CLAIM_URL='+str(j.get('claimUrl')))
+          PY
+      - name: Verify public Brulafine content
+        shell: bash
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 60); do
+            code=$(curl -L -sS -o /tmp/page.html -w '%{http_code}' "$URL" || true)
+            if [ "$code" = "200" ] && grep -qi 'Brulafine' /tmp/page.html; then
+              echo "VERCEL_VERIFY_PASS url=$URL http=200 bytes=$(wc -c </tmp/page.html)"
+              exit 0
+            fi
+            echo "attempt=$i http=$code"
+            sleep 5
+          done
+          echo "VERCEL_VERIFY_FAIL"
+          exit 1
