@@ -1,6 +1,6 @@
 # Wyylde Avis — Le Guide W (17/10/2026)
 
-Site de contenu indépendant, sans WordPress, cookies, traqueurs, JS ni abonnement. 17 URLs HTML pré-rendues : accueil + 16 pages, chacune dotée de titre, description, canonical, OG, JSON-LD Article/Breadcrumb et questions/réponses visibles. Les tarifs proviennent du centre d’aide officiel Wyylde (15/04/2026). Aucune promesse de position Google.
+Site de contenu indépendant, sans WordPress, cookies, traqueurs, JS ni abonnement. 20 URLs HTML pré-rendues : accueil + 19 pages, chacune dotée de titre, description, canonical, OG, JSON-LD Article/Breadcrumb et questions/réponses visibles. Les tarifs proviennent du centre d’aide officiel Wyylde (15/04/2026). Aucune promesse de position Google.
 
 ## Construire avec votre vrai domaine
 
