@@ -1,0 +1,26 @@
+name: ASTRA Cibao Tarija - credential presence only
+on:
+  push:
+    branches: [astra-cibao-tarija-static-hosting-20261104]
+    paths: [.github/workflows/astra-rescue-provider-probe.yml]
+permissions:
+  contents: read
+jobs:
+  safe-provider-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+      NETLIFY_API_TOKEN: ${{ secrets.NETLIFY_API_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Print Boolean provider presence only
+        shell: bash
+        run: |
+          for name in NETLIFY_AUTH_TOKEN NETLIFY_TOKEN NETLIFY_API_TOKEN CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CF_API_TOKEN VERCEL_TOKEN; do
+            if [ -n "${!name:-}" ]; then echo "${name}=AVAILABLE"; else echo "${name}=ABSENT"; fi
+          done
